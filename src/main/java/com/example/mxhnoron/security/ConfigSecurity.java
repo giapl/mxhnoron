@@ -1,6 +1,7 @@
 package com.example.mxhnoron.security;
 
 
+import org.jetbrains.annotations.NotNull;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -24,15 +25,14 @@ public class ConfigSecurity {
   @Bean
   public InMemoryUserDetailsManager inMemoryUserDetailsManager() {
     InMemoryUserDetailsManager manager = new InMemoryUserDetailsManager();
-    PasswordEncoder passwordEncoder = passwordEncoder();
     UserDetails user = User.withDefaultPasswordEncoder()
         .username("user")
-        .password(passwordEncoder.encode("123"))
+        .password("123")
         .roles("USER")
         .build();
     UserDetails admin = User.withDefaultPasswordEncoder()
         .username("admin")
-        .password(passwordEncoder.encode("123"))
+        .password("123")
         .roles("ADMIN")
         .build();
     manager.createUser(user);
@@ -47,11 +47,11 @@ public class ConfigSecurity {
 
 
   @Bean
-  public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+  public SecurityFilterChain securityFilterChain(@NotNull HttpSecurity http) throws Exception {
     http
         .csrf(csrf -> csrf.disable())
         .authorizeHttpRequests(requests -> requests
-            .requestMatchers(HttpMethod.POST, "/register").permitAll()
+            .requestMatchers(HttpMethod.POST, "/api/register").permitAll()
             .requestMatchers(HttpMethod.GET, "/api/all").hasRole("ADMIN")
             .requestMatchers(HttpMethod.GET, "/api/id").hasRole("ADMIN")
             .requestMatchers(HttpMethod.GET, "/api/username").hasRole("ADMIN")
