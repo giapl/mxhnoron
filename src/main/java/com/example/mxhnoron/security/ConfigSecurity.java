@@ -64,4 +64,5 @@ public class ConfigSecurity {
         .httpBasic(Customizer.withDefaults());
     return http.build();
   }
+
 }
