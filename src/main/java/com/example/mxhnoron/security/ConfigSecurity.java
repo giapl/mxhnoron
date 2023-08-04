@@ -1,6 +1,7 @@
 package com.example.mxhnoron.security;
 
 
+import com.example.mxhnoron.service.UserServiceDetail;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,7 +22,13 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class ConfigSecurity {
 
+    private final UserServiceDetail userServiceDetail;
 
+  public ConfigSecurity(UserServiceDetail userServiceDetail) {
+    this.userServiceDetail = userServiceDetail;
+  }
+
+/*
   @Bean
   public InMemoryUserDetailsManager inMemoryUserDetailsManager() {
     InMemoryUserDetailsManager manager = new InMemoryUserDetailsManager();
@@ -39,7 +46,7 @@ public class ConfigSecurity {
     manager.createUser(admin);
     return manager;
   }
-
+*/
   @Bean
   public PasswordEncoder passwordEncoder() {
     return new BCryptPasswordEncoder();
@@ -61,6 +68,8 @@ public class ConfigSecurity {
             .requestMatchers(HttpMethod.POST, "/api/createUserAdmin").hasRole("ADMIN")
             .anyRequest()
             .denyAll())
+        .userDetailsService(userServiceDetail)
+        .headers(headers -> headers.frameOptions().sameOrigin())
         .httpBasic(Customizer.withDefaults());
     return http.build();
   }
