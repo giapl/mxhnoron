@@ -6,8 +6,10 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import java.util.Date;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -29,5 +31,8 @@ public class User {
   private String password;
   @Column(name = "role")
   private String role;
+  @Column(name = "date")
+  @CreationTimestamp
+  private Date date;
 
 }

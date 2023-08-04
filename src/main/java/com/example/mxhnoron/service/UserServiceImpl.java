@@ -34,6 +34,7 @@ public class UserServiceImpl implements UserService {
     user1.setUsername(user.getUsername());
     user1.setPassword(passwordEncoder.encode(user.getPassword()));
     user1.setRole("USER");
+    user1.getDate();
     return iUserRepository.save(user1);
   }
 
@@ -78,6 +79,7 @@ public class UserServiceImpl implements UserService {
     user1.setUsername(user.getUsername());
     user1.setPassword(passwordEncoder.encode(user.getPassword()));
     user1.setRole(user.getRole());
+    user1.getDate();
     return iUserRepository.save(user1);
   }
 }
