@@ -3,6 +3,7 @@ package com.example.mxhnoron.service;
 import com.example.mxhnoron.data.enity.User;
 import com.example.mxhnoron.data.request.UserRequest;
 import com.example.mxhnoron.repository.IUserRepository;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import lombok.SneakyThrows;
@@ -34,7 +35,7 @@ public class UserServiceImpl implements UserService {
     user1.setUsername(user.getUsername());
     user1.setPassword(passwordEncoder.encode(user.getPassword()));
     user1.setRole("USER");
-    user1.getDate();
+    user1.setDate(new Date());
     return iUserRepository.save(user1);
   }
 
@@ -79,7 +80,7 @@ public class UserServiceImpl implements UserService {
     user1.setUsername(user.getUsername());
     user1.setPassword(passwordEncoder.encode(user.getPassword()));
     user1.setRole(user.getRole());
-    user1.getDate();
+    user1.setDate(new Date());
     return iUserRepository.save(user1);
   }
 }
