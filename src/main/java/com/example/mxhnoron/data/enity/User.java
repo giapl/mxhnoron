@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
 @Data
 @NoArgsConstructor
 @Entity
-@Table(name = "account")
+@Table(name = "user")
 public class User {
 
   @Id

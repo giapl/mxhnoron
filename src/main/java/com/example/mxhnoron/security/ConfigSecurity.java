@@ -10,43 +10,22 @@ import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class ConfigSecurity {
 
-    private final UserServiceDetail userServiceDetail;
+  private final UserServiceDetail userServiceDetail;
 
   public ConfigSecurity(UserServiceDetail userServiceDetail) {
     this.userServiceDetail = userServiceDetail;
   }
 
-/*
-  @Bean
-  public InMemoryUserDetailsManager inMemoryUserDetailsManager() {
-    InMemoryUserDetailsManager manager = new InMemoryUserDetailsManager();
-    UserDetails user = User.withDefaultPasswordEncoder()
-        .username("user")
-        .password("123")
-        .roles("USER")
-        .build();
-    UserDetails admin = User.withDefaultPasswordEncoder()
-        .username("admin")
-        .password("123")
-        .roles("ADMIN")
-        .build();
-    manager.createUser(user);
-    manager.createUser(admin);
-    return manager;
-  }
-*/
   @Bean
   public PasswordEncoder passwordEncoder() {
     return new BCryptPasswordEncoder();
@@ -58,14 +37,24 @@ public class ConfigSecurity {
     http
         .csrf(csrf -> csrf.disable())
         .authorizeHttpRequests(requests -> requests
-            .requestMatchers(HttpMethod.POST, "/api/register").permitAll()
-            .requestMatchers(HttpMethod.GET, "/api/all").hasRole("ADMIN")
-            .requestMatchers(HttpMethod.GET, "/api/id").hasRole("ADMIN")
-            .requestMatchers(HttpMethod.GET, "/api/username").hasRole("ADMIN")
-            .requestMatchers(HttpMethod.GET, "/api/usernameAndId").hasRole("ADMIN")
-            .requestMatchers(HttpMethod.DELETE, "/api/delete").hasRole("ADMIN")
-            .requestMatchers(HttpMethod.DELETE, "/api/deleteUsername").hasRole("ADMIN")
-            .requestMatchers(HttpMethod.POST, "/api/createUserAdmin").hasRole("ADMIN")
+            .requestMatchers(new AntPathRequestMatcher("/api/register", HttpMethod.POST.name()))
+            .permitAll()
+            .requestMatchers(new AntPathRequestMatcher("/api/all", HttpMethod.GET.name()))
+            .hasRole("ADMIN")
+            .requestMatchers(new AntPathRequestMatcher("/api/id", HttpMethod.GET.name()))
+            .hasRole("ADMIN")
+            .requestMatchers(new AntPathRequestMatcher("/api/username", HttpMethod.GET.name()))
+            .hasRole("ADMIN")
+            .requestMatchers(new AntPathRequestMatcher("/api/usernameAndId", HttpMethod.GET.name()))
+            .hasRole("ADMIN")
+            .requestMatchers(new AntPathRequestMatcher("/api/delete", HttpMethod.DELETE.name()))
+            .hasRole("ADMIN")
+            .requestMatchers(
+                new AntPathRequestMatcher("/api/deleteUsername", HttpMethod.DELETE.name()))
+            .hasRole("ADMIN")
+            .requestMatchers(
+                new AntPathRequestMatcher("/api/createUserAdmin", HttpMethod.GET.name()))
+            .hasRole("ADMIN")
             .anyRequest()
             .denyAll())
         .userDetailsService(userServiceDetail)
